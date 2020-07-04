@@ -18,6 +18,8 @@ import mainscreen from './app/screens/mainscreen';
 
 import addcoursescreen from './app/screens/addcoursescreen';
 
+import viewdetails from './app/screens/viewdetails';
+
 import {useColorScheme} from 'react-native-appearance';
 
 const Stack = createStackNavigator();
@@ -35,6 +37,7 @@ function App() {
         <Stack.Screen name="Register" component={register} />
         <Stack.Screen name="Home" component={mainscreen} />
         <Stack.Screen name="AddCourse" component={addcoursescreen} />
+        <Stack.Screen name="ViewDetails" component={viewdetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

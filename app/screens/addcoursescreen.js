@@ -52,8 +52,12 @@ function addcoursescreen({navigation}) {
         };
         var studentdetails = callPatchApi(url, data);
         studentdetails.then(function(resultB) {
+          AsyncStorage.setItem(
+            'coursedetails',
+            JSON.stringify(resultB.courses),
+          );
           if (resultB.name !== undefined) {
-            navigation.goBack();
+            navigation.push('Home');
           }
         });
       });

@@ -40,7 +40,6 @@ function mainscreen({navigation}) {
   const [coursedet, setCourseDet] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const colorScheme = useColorScheme();
-
   useEffect(() => {
     var username = AsyncStorage.getItem('username');
     username.then(function(result) {
@@ -62,7 +61,7 @@ function mainscreen({navigation}) {
         });
       });
     });
-  }, [coursedet]);
+  }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     var username = AsyncStorage.getItem('username');
@@ -92,7 +91,15 @@ function mainscreen({navigation}) {
           {data.name}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.viewdetails}>
+      <TouchableOpacity
+        style={styles.viewdetails}
+        onPress={async () => {
+          await AsyncStorage.setItem(
+            'requiredcourseinfo',
+            JSON.stringify(data),
+          );
+          navigation.push('ViewDetails');
+        }}>
         <Icon name="infocirlceo" size={25} style={styles.icon} />
       </TouchableOpacity>
     </View>
@@ -149,22 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: getww(5),
     bottom: getwh(2),
-  },
-  addcoursebutton: {
-    backgroundColor: '#007aff',
-    padding: getww(2),
-    width: getww(60),
-    height: getwh(6),
-    marginTop: getwh(4),
-    marginBottom: getwh(5),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
-    marginLeft: getww(19.5),
-    marginRight: getww(15),
-    borderRadius: 40,
-    borderWidth: 2,
-    borderColor: '#007aff',
-    alignItems: 'center',
   },
   coursebutton: {
     width: getww(80),
