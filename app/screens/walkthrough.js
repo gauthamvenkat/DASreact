@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 
 import {
   StyleSheet,
@@ -18,8 +18,8 @@ import {useColorScheme} from 'react-native-appearance';
 function walkthrough({navigation}) {
   const colorScheme = useColorScheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
   const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 200,
@@ -60,21 +60,25 @@ function walkthrough({navigation}) {
     );
   };
   return (
-    <AppIntroSlider
-      showNextButton={false}
-      showDoneButton={false}
-      onDone={fadeIn()}
-      renderItem={_renderItem}
-      activeDotStyle={styles.activeslider}
-      dotStyle={styles.slider}
-      data={slides}
-      keyExtractor={item => item.key.toString()}
-    />
+    <View style={styles.main}>
+      <AppIntroSlider
+        showNextButton={false}
+        showDoneButton={false}
+        onDone={fadeIn()}
+        renderItem={_renderItem}
+        activeDotStyle={styles.activeslider}
+        dotStyle={styles.slider}
+        data={slides}
+        keyExtractor={item => item.key.toString()}
+      />
+    </View>
   );
 }
 const styles = StyleSheet.create({
-  slide: {
+  main: {
     flex: 1,
+  },
+  slide: {
     alignItems: 'center',
   },
   title: {

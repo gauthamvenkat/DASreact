@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
   RefreshControl,
-  Image,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -21,6 +20,8 @@ import {callGetApi} from '../services/index';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import {useColorScheme} from 'react-native-appearance';
+
+import {useRoute} from '@react-navigation/native';
 
 var colors = [
   '#8F1D21',
@@ -40,6 +41,8 @@ function mainscreen({navigation}) {
   const [coursedet, setCourseDet] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const colorScheme = useColorScheme();
+  const route = useRoute();
+
   useEffect(() => {
     var username = AsyncStorage.getItem('username');
     username.then(function(result) {
@@ -86,7 +89,15 @@ function mainscreen({navigation}) {
     <View
       key={data.courseID}
       style={[styles.list, {backgroundColor: colors[index % colors.length]}]}>
-      <TouchableOpacity style={styles.coursebutton}>
+      <TouchableOpacity
+        style={styles.coursebutton}
+        onPress={async () => {
+          await AsyncStorage.setItem(
+            'requiredcourseinfo',
+            JSON.stringify(data),
+          );
+          navigation.push('PostAttendance');
+        }}>
         <Text style={styles.coursename} numberOfLines={1}>
           {data.name}
         </Text>

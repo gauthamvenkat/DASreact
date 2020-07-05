@@ -7,6 +7,7 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -221,7 +222,9 @@ function viewdetails({navigation}) {
             : 'Total Classes : 0'}
         </Text>
       </View>
-      <TouchableOpacity style={styles.postattendance}>
+      <TouchableOpacity
+        style={styles.postattendance}
+        onPress={() => navigation.push('PostAttendanceV')}>
         <Text style={styles.post}>Post Attendance</Text>
       </TouchableOpacity>
     </View>
@@ -272,7 +275,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   TouchableOpacityStyle: {
-    top: getwh(2),
+    top: getwh(5.5),
     position: 'absolute',
     width: getww(10),
     height: getwh(10),

@@ -32,6 +32,7 @@ function login({navigation}) {
     AsyncStorage.setItem('token', loginApi.token);
     AsyncStorage.setItem('username', logintext);
     if (loginApi.token !== undefined) {
+      AsyncStorage.setItem('login', 'true');
       navigation.push('Home');
     }
   };
