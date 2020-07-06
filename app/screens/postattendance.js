@@ -86,6 +86,7 @@ function postattendance({navigation}) {
           Post Attendance by Scanning the QR Code
         </Text>
       }
+      containerStyle={styles.container}
       showMarker={true}
       markerStyle={styles.marker}
     />
@@ -96,9 +97,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 20,
+    textAlign: 'center',
   },
   marker: {
     borderColor: '#007aff',
+  },
+  container: {
+    backgroundColor: '#000000',
   },
 });
 export default postattendance;

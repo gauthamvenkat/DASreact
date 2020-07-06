@@ -7,9 +7,8 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  ScrollView,
 } from 'react-native';
-
-import AsyncStorage from '@react-native-community/async-storage';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -64,7 +63,7 @@ function register({navigation}) {
     console.log(registerApi);
   };
   return (
-    <KeyboardAwareScrollView>
+    <ScrollView>
       <Text style={styles.title}>Welcome to D.A.S</Text>
       <Text style={styles.titleA}>
         Please fill in the following information to register into D.A.S
@@ -151,32 +150,29 @@ function register({navigation}) {
         ) : null}
       </View>
       <TouchableOpacity
-        style={styles.loginbutton}
+        style={styles.registerbutton}
         onPress={() => {
           if (emailvalid && passwordvalid === true) {
             onSucess();
           }
         }}>
-        <Text style={styles.logintext}>Register</Text>
+        <Text style={styles.registertext}>Register</Text>
       </TouchableOpacity>
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-  loginbutton: {
+  registerbutton: {
     backgroundColor: '#007aff',
-    padding: getww(2),
     width: getww(60),
     height: getwh(6),
     marginTop: getwh(4),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
     marginLeft: getww(19.5),
     marginRight: getww(15),
     borderRadius: 40,
     borderWidth: 2,
     borderColor: '#007aff',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     marginTop: getwh(7),
@@ -203,9 +199,10 @@ const styles = StyleSheet.create({
     marginLeft: getww(15),
     marginRight: getww(15),
   },
-  logintext: {
+  registertext: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   nameinput: {
     borderBottomWidth: 2,

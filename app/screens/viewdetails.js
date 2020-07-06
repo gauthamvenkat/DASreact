@@ -144,90 +144,107 @@ function viewdetails({navigation}) {
     });
   }, []);
   return (
-    <View style={styles.mainview}>
-      <Text
-        style={colorScheme === 'dark' ? styles.darkcourseid : styles.courseid}>
-        {courseId}
-      </Text>
-      <Text
-        style={
-          colorScheme === 'dark' ? styles.darkcoursename : styles.coursename
-        }>
-        {courseName}
-      </Text>
-      <View style={styles.progressbar}>
-        <Svg width={getww(52)} height={getwh(30)} style={styles.svg}>
-          <Circle
-            stroke={'#f2f2f2'}
-            fill="none"
-            cx={getww(26)}
-            cy={getwh(15)}
-            r={100}
-            strokeWidth={getww(2)}
-          />
-          <Circle
-            stroke={
-              totalAttendance >= 75
-                ? totalAttendance === 75
-                  ? '#FFA500'
-                  : '#008000'
-                : '#FF0000'
-            }
-            fill="none"
-            cx={getww(26)}
-            cy={getwh(15)}
-            r={100}
-            strokeDasharray={`${100 * 2 * Math.PI} ${100 * 2 * Math.PI}`}
-            strokeDashoffset={
-              100 * Math.PI * 2 * ((100 - totalAttendance) / 100)
-            }
-            strokeLinecap="round"
-            transform={`rotate(-90, ${getww(26)}, ${getwh(15)})`}
-            strokeWidth={getww(2)}
-          />
-          <SVGText
-            fontSize={'20'}
-            fontWeight={'bold'}
-            x={getww(26)}
-            y={getwh(16)}
-            textAnchor="middle"
-            fill={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}>
-            {totalAttendance !== undefined ? `${totalAttendance} %` : '0 %'}
-          </SVGText>
-        </Svg>
-        <View style={styles.buttonview}>
-          <TouchableOpacity style={styles.minusbutton} onPress={() => minus()}>
-            <Icon name="minus" size={35} style={styles.icon} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.plusbutton} onPress={() => add()}>
-            <Icon name="plus" size={35} style={styles.icon} />
-          </TouchableOpacity>
+    <ScrollView>
+      <View style={styles.mainview}>
+        <Text
+          style={colorScheme === 'dark' ? styles.darkcourseid : styles.courseid}
+          numberOfLines={1}>
+          {courseId}
+        </Text>
+        <Text
+          style={
+            colorScheme === 'dark' ? styles.darkcoursename : styles.coursename
+          }
+          numberOfLines={1}>
+          {courseName}
+        </Text>
+        <View style={styles.progressbar}>
+          <Svg
+            width={getww(60)}
+            height={getwh(30)}
+            style={styles.svg}
+            viewBox={`${getww(0)} ${getwh(0)} ${getww(50)} ${getwh(30)}`}>
+            <Circle
+              stroke={'#f2f2f2'}
+              fill="none"
+              cx={getww(26)}
+              cy={getwh(15)}
+              r={Math.round(getww(17) + getwh(17)) / 2}
+              strokeWidth={getww(2)}
+            />
+            <Circle
+              stroke={
+                totalAttendance >= 75
+                  ? totalAttendance === 75
+                    ? '#FFA500'
+                    : '#008000'
+                  : '#FF0000'
+              }
+              fill="none"
+              cx={getww(26)}
+              cy={getwh(15)}
+              r={Math.round(getww(17) + getwh(17)) / 2}
+              strokeDasharray={`${(Math.round(getww(17) + getwh(17)) / 2) *
+                2 *
+                Math.PI} ${(Math.round(getww(17) + getwh(17)) / 2) *
+                2 *
+                Math.PI}`}
+              strokeDashoffset={
+                (Math.round(getww(17) + getwh(17)) / 2) *
+                Math.PI *
+                2 *
+                ((100 - totalAttendance) / 100)
+              }
+              strokeLinecap="round"
+              transform={`rotate(-90, ${getww(26)}, ${getwh(15)})`}
+              strokeWidth={getww(2)}
+            />
+            <SVGText
+              fontSize={'20'}
+              fontWeight={'bold'}
+              x={getww(26)}
+              y={getwh(16)}
+              textAnchor="middle"
+              fill={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}>
+              {totalAttendance !== undefined ? `${totalAttendance} %` : '0 %'}
+            </SVGText>
+          </Svg>
+          <View style={styles.buttonview}>
+            <TouchableOpacity
+              style={styles.minusbutton}
+              onPress={() => minus()}>
+              <Icon name="minus" size={35} style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.plusbutton} onPress={() => add()}>
+              <Icon name="plus" size={35} style={styles.icon} />
+            </TouchableOpacity>
+          </View>
         </View>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.TouchableOpacityStyle}
+          onPress={() => refresh()}>
+          <Icon name="reload1" size={25} style={styles.icon} />
+        </TouchableOpacity>
+        <View style={styles.classesinfo}>
+          <Text style={colorScheme === 'dark' ? styles.darktca : styles.tca}>
+            {totalClassesAttended !== undefined
+              ? `Classes Attended: ${totalClassesAttended}`
+              : 'Classes Attended: 0'}
+          </Text>
+          <Text style={colorScheme === 'dark' ? styles.darktct : styles.tct}>
+            {totalClassesTaken !== undefined
+              ? `Total Classes : ${totalClassesTaken}`
+              : 'Total Classes : 0'}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.postattendance}
+          onPress={() => navigation.push('PostAttendanceV')}>
+          <Text style={styles.post}>Post Attendance</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.TouchableOpacityStyle}
-        onPress={() => refresh()}>
-        <Icon name="reload1" size={25} style={styles.icon} />
-      </TouchableOpacity>
-      <View style={styles.classesinfo}>
-        <Text style={colorScheme === 'dark' ? styles.darktca : styles.tca}>
-          {totalClassesAttended !== undefined
-            ? `Classes Attended: ${totalClassesAttended}`
-            : 'Classes Attended: 0'}
-        </Text>
-        <Text style={colorScheme === 'dark' ? styles.darktct : styles.tct}>
-          {totalClassesTaken !== undefined
-            ? `Total Classes : ${totalClassesTaken}`
-            : 'Total Classes : 0'}
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.postattendance}
-        onPress={() => navigation.push('PostAttendanceV')}>
-        <Text style={styles.post}>Post Attendance</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -235,7 +252,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     marginLeft: getww(5),
-    marginTop: getwh(6),
+    marginTop: getwh(5),
+  },
+  mainview: {
+    paddingBottom: getwh(2),
   },
   post: {
     textAlign: 'center',
@@ -286,8 +306,8 @@ const styles = StyleSheet.create({
   },
   buttonview: {
     flexDirection: 'row',
-    marginTop: getwh(6.5),
-    marginLeft: getww(15),
+    marginTop: getwh(4),
+    marginLeft: getww(18),
   },
   minusbutton: {
     marginRight: getww(8),
@@ -297,8 +317,9 @@ const styles = StyleSheet.create({
     marginRight: getww(1),
   },
   progressbar: {
+    marginLeft: getwh(10),
+    marginRight: getww(10),
     marginTop: getwh(10),
-    marginLeft: getww(24),
   },
   darkcourseid: {
     fontWeight: 'bold',
@@ -311,12 +332,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     marginLeft: getww(5),
+    marginRight: getww(5),
   },
   darkcoursename: {
     fontWeight: 'bold',
     fontSize: 20,
     color: '#FFFFFF',
     marginLeft: getww(5),
+    marginRight: getww(5),
   },
   facultyname: {
     fontWeight: 'bold',

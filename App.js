@@ -18,7 +18,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {getwh, getww} from './app/utils/layout';
+import {getwh, getww, width} from './app/utils/layout';
 
 import AppIntroSlider from 'react-native-app-intro-slider';
 
@@ -52,8 +52,11 @@ const AuthContext = createContext();
 
 function SplashScreen() {
   return (
-    <View>
-      <Text>Loading...</Text>
+    <View style={styles.splash}>
+      <Image
+        style={loginstyles.imageSplash}
+        source={require('./app/assets/dasicon.png')}
+      />
     </View>
   );
 }
@@ -63,9 +66,12 @@ function login() {
   const colorScheme = useColorScheme();
   const [logintext, setLoginText] = useState('');
   const [registertext, setRegisterText] = useState('');
+  const [logininfo, setLoginInfo] = useState(false);
 
   const onSucess = async () => {
-    signIn({logintext, registertext});
+    setLoginInfo(true);
+    var info = await signIn({logintext, registertext});
+    setLoginInfo(info);
   };
   return (
     <View>
@@ -99,7 +105,9 @@ function login() {
       <TouchableOpacity
         style={loginstyles.loginbutton}
         onPress={() => onSucess()}>
-        <Text style={loginstyles.logintext}>Login</Text>
+        <Text style={loginstyles.logintext}>
+          {logininfo ? 'Logging In...' : 'Login'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -143,7 +151,7 @@ function walkthrough({navigation}) {
   ];
   const _renderItem = ({item}) => {
     return (
-      <View style={styles.slide}>
+      <View style={item.login ? styles.slide1 : styles.slide}>
         <Text style={styles.title}>{item.title}</Text>
         <Image style={styles.image} source={item.image} />
         <Text style={styles.text}>{item.text}</Text>
@@ -251,12 +259,12 @@ export default function App({navigation}) {
         };
         var url = 'token/login';
         var loginApi = await callPostApi(urldata, url);
-        console.log(loginApi);
         await AsyncStorage.setItem('token', loginApi.token);
         await AsyncStorage.setItem('username', data.logintext);
         if (loginApi.token !== undefined) {
           dispatch({type: 'SIGN_IN', token: loginApi.token});
         }
+        return false;
       },
       signOut: () => dispatch({type: 'SIGN_OUT'}),
     }),
@@ -274,7 +282,7 @@ export default function App({navigation}) {
           ) : state.userToken == null ? (
             <>
               <Stack.Screen
-                name="SignIn"
+                name="Walkthrough"
                 component={walkthrough}
                 options={{
                   // When logging out, a pop animation feels intuitive
@@ -305,6 +313,18 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: getwh(30),
+  },
+  splash: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  slide1: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: getwh(15),
   },
   title: {
     fontSize: 26,
@@ -323,59 +343,54 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#007aff',
+    flexWrap: 'wrap',
+    textAlign: 'center',
   },
   loginbutton: {
     backgroundColor: '#007aff',
-    padding: getww(2),
     width: getww(60),
     height: getwh(6),
     marginTop: getwh(2),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
     marginLeft: getww(15),
     marginRight: getww(15),
     borderRadius: 40,
     borderWidth: 2,
+    justifyContent: 'center',
     borderColor: '#007aff',
-    alignItems: 'center',
   },
   logintext: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   registertext: {
     color: '#007aff',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   registerbutton: {
     backgroundColor: '#FFFFFF',
-    padding: getww(2),
     width: getww(60),
     height: getwh(6),
     marginTop: getwh(2),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
     marginLeft: getww(15),
     marginRight: getww(15),
     borderRadius: 40,
     borderWidth: 2,
     borderColor: '#007aff',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
   darkregisterbutton: {
     backgroundColor: '#000000',
-    padding: getww(2),
     width: getww(60),
     height: getwh(6),
     marginTop: getwh(2),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
     marginLeft: getww(15),
     marginRight: getww(15),
     borderRadius: 40,
     borderWidth: 2,
     borderColor: '#007aff',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: getww(60),
@@ -389,22 +404,20 @@ const styles = StyleSheet.create({
 const loginstyles = StyleSheet.create({
   loginbutton: {
     backgroundColor: '#007aff',
-    padding: getww(2),
     width: getww(60),
     height: getwh(6),
     marginTop: getwh(4),
-    paddingTop: getwh(1.5),
-    paddingBottom: getwh(2),
     marginLeft: getww(19.5),
     marginRight: getww(15),
     borderRadius: 40,
     borderWidth: 2,
     borderColor: '#007aff',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
   logintext: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   usernameinput: {
     borderWidth: 2,
@@ -460,6 +473,12 @@ const loginstyles = StyleSheet.create({
     height: getwh(25),
     marginTop: getwh(13),
     justifyContent: 'center',
+    resizeMode: 'contain',
+  },
+  imageSplash: {
+    marginLeft: getww(38),
+    width: getww(30),
+    height: getwh(30),
     resizeMode: 'contain',
   },
 });

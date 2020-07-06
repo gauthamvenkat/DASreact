@@ -134,14 +134,15 @@ function mainscreen({navigation}) {
                 <Text
                   style={
                     colorScheme === 'dark' ? styles.darktitle : styles.title
-                  }>{`Welcome ${studentdet.name}`}</Text>
+                  }
+                  numberOfLines={1}>{`Welcome ${studentdet.name}`}</Text>
               </View>
               <View style={styles.listview}>{listItems}</View>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.TouchableOpacityStyle}
                 onPress={() => navigation.push('AddCourse')}>
-                <Icon name="pluscircle" size={35} style={styles.icon} />
+                <Icon name="plus" size={35} style={styles.icon} />
               </TouchableOpacity>
             </ScrollView>
           </SafeAreaView>
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     height: getwh(10),
     alignItems: 'center',
     justifyContent: 'center',
-    right: getww(5),
+    right: getww(6),
     bottom: getwh(2),
   },
   coursebutton: {
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     marginTop: getwh(5),
     marginLeft: getww(3),
     marginBottom: getwh(2),
-    width: getww(80),
+    width: getww(70),
     height: getwh(2),
   },
   viewdetails: {

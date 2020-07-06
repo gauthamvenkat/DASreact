@@ -71,6 +71,7 @@ function addcoursescreen({navigation}) {
         <Text style={styles.toptext}>Add Course by Scanning the QR Code</Text>
       }
       showMarker={true}
+      containerStyle={styles.container}
       markerStyle={styles.marker}
     />
   );
@@ -80,9 +81,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 20,
+    textAlign: 'center',
   },
   marker: {
     borderColor: '#007aff',
+  },
+  container: {
+    backgroundColor: '#000000',
   },
 });
 export default addcoursescreen;
