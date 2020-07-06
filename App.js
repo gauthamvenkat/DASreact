@@ -1,6 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {
+  useState,
+  useContext,
+  createContext,
+  useEffect,
+  useReducer,
+  useMemo,
+  useRef,
+} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  Text,
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+  Animated,
+  StyleSheet,
+} from 'react-native';
+
+import {getwh, getww} from './app/utils/layout';
+
+import AppIntroSlider from 'react-native-app-intro-slider';
+
+import {callPostApi} from './app/services/index';
 
 import {
   NavigationContainer,
@@ -8,11 +30,7 @@ import {
   DarkTheme,
 } from '@react-navigation/native';
 
-import {ActivityIndicator} from 'react-native';
-
-import walkthrough from './app/screens/walkthrough';
-
-import login from './app/screens/login';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import register from './app/screens/register';
 
@@ -30,42 +48,418 @@ import postattendancev from './app/screens/postattendancev';
 
 import {useColorScheme} from 'react-native-appearance';
 
-const Stack = createStackNavigator();
+const AuthContext = createContext();
 
-function App() {
-  const [appLogin, setAppLogin] = useState(false);
-  const [activity, setActivity] = useState(false);
-  const colorScheme = useColorScheme();
-  useEffect(() => {
-    const authToken = AsyncStorage.getItem('login');
-    authToken.then(function(result) {
-      if (result === 'true') {
-        setAppLogin(true);
-        setActivity(true);
-        setActivity(false);
-      }
-    });
-  }, []);
+function SplashScreen() {
   return (
-    <NavigationContainer
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {activity ? (
-        <ActivityIndicator />
-      ) : (
-        <Stack.Navigator
-          initialRouteName={appLogin ? 'Home' : 'Main'}
-          screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Main" component={walkthrough} />
-          <Stack.Screen name="Login" component={login} />
-          <Stack.Screen name="Register" component={register} />
-          <Stack.Screen name="Home" component={mainscreen} />
-          <Stack.Screen name="AddCourse" component={addcoursescreen} />
-          <Stack.Screen name="ViewDetails" component={viewdetails} />
-          <Stack.Screen name="PostAttendance" component={postattendance} />
-          <Stack.Screen name="PostAttendanceV" component={postattendancev} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+    <View>
+      <Text>Loading...</Text>
+    </View>
   );
 }
-export default App;
+
+function login() {
+  const {signIn} = useContext(AuthContext);
+  const colorScheme = useColorScheme();
+  const [logintext, setLoginText] = useState('');
+  const [registertext, setRegisterText] = useState('');
+
+  const onSucess = async () => {
+    signIn({logintext, registertext});
+  };
+  return (
+    <View>
+      <Image
+        style={loginstyles.image}
+        source={require('./app/assets/dasicon.png')}
+      />
+      <TextInput
+        style={
+          colorScheme === 'dark'
+            ? loginstyles.darkusernameinput
+            : loginstyles.usernameinput
+        }
+        placeholder="Username"
+        placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
+        onChangeText={text => setLoginText(text)}
+        defaultValue={logintext}
+      />
+      <TextInput
+        style={
+          colorScheme === 'dark'
+            ? loginstyles.darkpasswordinput
+            : loginstyles.passwordinput
+        }
+        secureTextEntry={true}
+        placeholder="Password"
+        placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
+        onChangeText={text => setRegisterText(text)}
+        defaultValue={registertext}
+      />
+      <TouchableOpacity
+        style={loginstyles.loginbutton}
+        onPress={() => onSucess()}>
+        <Text style={loginstyles.logintext}>Login</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+function walkthrough({navigation}) {
+  const colorScheme = useColorScheme();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+  const slides = [
+    {
+      key: 1,
+      title: 'D.A.S',
+      text: 'Welcome to DAS',
+      desc: 'Firstly, Login using you college credentials',
+      login: false,
+      image: require('./app/assets/attendance.png'),
+    },
+    {
+      key: 2,
+      title: 'D.A.S',
+      text: 'Step 2',
+      desc: 'Select the course',
+      login: false,
+      image: require('./app/assets/ff4e830ad7e7604c98f5756c05cd6b14.png'),
+    },
+    {
+      key: 3,
+      title: 'D.A.S',
+      text: 'Step 3 ',
+      desc: 'Scan the QR code displayed',
+      login: true,
+      image: require('./app/assets/78107-200.png'),
+    },
+  ];
+  const _renderItem = ({item}) => {
+    return (
+      <View style={styles.slide}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Image style={styles.image} source={item.image} />
+        <Text style={styles.text}>{item.text}</Text>
+        <Text style={styles.text}>{item.desc}</Text>
+        {item.login === true ? (
+          <Animated.View
+            style={[
+              {
+                opacity: fadeAnim, // Bind opacity to animated value
+              },
+            ]}>
+            <TouchableOpacity
+              style={styles.loginbutton}
+              onPress={() => navigation.push('Login')}>
+              <Text style={styles.logintext}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                colorScheme === 'dark'
+                  ? styles.darkregisterbutton
+                  : styles.registerbutton
+              }
+              onPress={() => navigation.push('Register')}>
+              <Text style={styles.registertext}>Register</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        ) : null}
+      </View>
+    );
+  };
+  return (
+    <AppIntroSlider
+      showNextButton={false}
+      showDoneButton={false}
+      onDone={fadeIn()}
+      renderItem={_renderItem}
+      activeDotStyle={styles.activeslider}
+      dotStyle={styles.slider}
+      data={slides}
+      keyExtractor={item => item.key.toString()}
+    />
+  );
+}
+const Stack = createStackNavigator();
+
+export default function App({navigation}) {
+  const colorScheme = useColorScheme();
+  const [state, dispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          };
+      }
+    },
+    {
+      isLoading: true,
+      isSignout: false,
+      userToken: null,
+    },
+  );
+
+  useEffect(() => {
+    // Fetch the token from storage then navigate to our appropriate place
+    const bootstrapAsync = async () => {
+      let userToken;
+
+      try {
+        userToken = await AsyncStorage.getItem('token');
+      } catch (e) {
+        // Restoring token failed
+      }
+
+      // After restoring token, we may need to validate it in production apps
+
+      // This will switch to the App screen or Auth screen and this loading
+      // screen will be unmounted and thrown away.
+      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+    };
+
+    bootstrapAsync();
+  }, []);
+
+  const authContext = useMemo(
+    () => ({
+      signIn: async data => {
+        var urldata = {
+          username: data.logintext,
+          password: data.registertext,
+        };
+        var url = 'token/login';
+        var loginApi = await callPostApi(urldata, url);
+        console.log(loginApi);
+        await AsyncStorage.setItem('token', loginApi.token);
+        await AsyncStorage.setItem('username', data.logintext);
+        if (loginApi.token !== undefined) {
+          dispatch({type: 'SIGN_IN', token: loginApi.token});
+        }
+      },
+      signOut: () => dispatch({type: 'SIGN_OUT'}),
+    }),
+    [],
+  );
+
+  return (
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer
+        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack.Navigator headerMode={'none'}>
+          {state.isLoading ? (
+            // We haven't finished checking for the token yet
+            <Stack.Screen name="Splash" component={SplashScreen} />
+          ) : state.userToken == null ? (
+            <>
+              <Stack.Screen
+                name="SignIn"
+                component={walkthrough}
+                options={{
+                  // When logging out, a pop animation feels intuitive
+                  animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                }}
+              />
+              <Stack.Screen name="Login" component={login} />
+              <Stack.Screen name="Register" component={register} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Home" component={mainscreen} />
+              <Stack.Screen name="ViewDetails" component={viewdetails} />
+              <Stack.Screen name="PostAttendance" component={postattendance} />
+              <Stack.Screen
+                name="PostAttendanceV"
+                component={postattendancev}
+              />
+              <Stack.Screen name="AddCourse" component={addcoursescreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthContext.Provider>
+  );
+}
+const styles = StyleSheet.create({
+  slide: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 26,
+    color: '#007aff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: getwh(21),
+  },
+  slider: {
+    backgroundColor: '#ADD8E6',
+  },
+  activeslider: {
+    backgroundColor: '#007aff',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#007aff',
+  },
+  loginbutton: {
+    backgroundColor: '#007aff',
+    padding: getww(2),
+    width: getww(60),
+    height: getwh(6),
+    marginTop: getwh(2),
+    paddingTop: getwh(1.5),
+    paddingBottom: getwh(2),
+    marginLeft: getww(15),
+    marginRight: getww(15),
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#007aff',
+    alignItems: 'center',
+  },
+  logintext: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  registertext: {
+    color: '#007aff',
+    fontWeight: 'bold',
+  },
+  registerbutton: {
+    backgroundColor: '#FFFFFF',
+    padding: getww(2),
+    width: getww(60),
+    height: getwh(6),
+    marginTop: getwh(2),
+    paddingTop: getwh(1.5),
+    paddingBottom: getwh(2),
+    marginLeft: getww(15),
+    marginRight: getww(15),
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#007aff',
+    alignItems: 'center',
+  },
+  darkregisterbutton: {
+    backgroundColor: '#000000',
+    padding: getww(2),
+    width: getww(60),
+    height: getwh(6),
+    marginTop: getwh(2),
+    paddingTop: getwh(1.5),
+    paddingBottom: getwh(2),
+    marginLeft: getww(15),
+    marginRight: getww(15),
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#007aff',
+    alignItems: 'center',
+  },
+  image: {
+    width: getww(60),
+    height: getwh(40),
+    marginTop: getwh(0),
+    justifyContent: 'center',
+    resizeMode: 'contain',
+    tintColor: '#007aff',
+  },
+});
+const loginstyles = StyleSheet.create({
+  loginbutton: {
+    backgroundColor: '#007aff',
+    padding: getww(2),
+    width: getww(60),
+    height: getwh(6),
+    marginTop: getwh(4),
+    paddingTop: getwh(1.5),
+    paddingBottom: getwh(2),
+    marginLeft: getww(19.5),
+    marginRight: getww(15),
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#007aff',
+    alignItems: 'center',
+  },
+  logintext: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  usernameinput: {
+    borderWidth: 2,
+    paddingLeft: getww(4),
+    fontSize: 15,
+    marginTop: getwh(1),
+    marginLeft: getww(15),
+    borderRadius: 40,
+    borderColor: '#007aff',
+    marginRight: getww(15),
+    alignItems: 'center',
+    color: '#000000',
+  },
+  darkusernameinput: {
+    borderWidth: 2,
+    paddingLeft: getww(4),
+    fontSize: 15,
+    marginTop: getwh(1),
+    marginLeft: getww(15),
+    borderRadius: 40,
+    borderColor: '#007aff',
+    marginRight: getww(15),
+    alignItems: 'center',
+    color: '#FFFFFF',
+  },
+  passwordinput: {
+    borderWidth: 2,
+    paddingLeft: getww(4),
+    fontSize: 15,
+    marginTop: getwh(5),
+    marginLeft: getww(15),
+    borderRadius: 40,
+    borderColor: '#007aff',
+    marginRight: getww(15),
+    alignItems: 'center',
+    color: '#000000',
+  },
+  darkpasswordinput: {
+    borderWidth: 2,
+    paddingLeft: getww(4),
+    fontSize: 15,
+    marginTop: getwh(5),
+    marginLeft: getww(15),
+    borderRadius: 40,
+    borderColor: '#007aff',
+    marginRight: getww(15),
+    alignItems: 'center',
+    color: '#FFFFFF',
+  },
+  image: {
+    marginLeft: getww(38),
+    width: getww(25),
+    height: getwh(25),
+    marginTop: getwh(13),
+    justifyContent: 'center',
+    resizeMode: 'contain',
+  },
+});
