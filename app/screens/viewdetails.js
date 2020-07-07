@@ -165,7 +165,13 @@ function viewdetails({navigation}) {
             style={styles.svg}
             viewBox={`${getww(0)} ${getwh(0)} ${getww(50)} ${getwh(30)}`}>
             <Circle
-              stroke={'#f2f2f2'}
+              stroke={
+                totalAttendance >= 75
+                  ? totalAttendance === 75
+                    ? '#fed8b1'
+                    : '#90ee90'
+                  : '#ffcccb'
+              }
               fill="none"
               cx={getww(26)}
               cy={getwh(15)}
