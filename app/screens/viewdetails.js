@@ -176,7 +176,7 @@ function viewdetails({navigation}) {
               cx={getww(26)}
               cy={getwh(15)}
               r={Math.round(getww(17) + getwh(17)) / 2}
-              strokeWidth={getww(2)}
+              strokeWidth={getww(5)}
             />
             <Circle
               stroke={
@@ -201,9 +201,9 @@ function viewdetails({navigation}) {
                 2 *
                 ((100 - totalAttendance) / 100)
               }
-              strokeLinecap="round"
+              strokeLinecap="square"
               transform={`rotate(-90, ${getww(26)}, ${getwh(15)})`}
-              strokeWidth={getww(2)}
+              strokeWidth={getww(5)}
             />
             <SVGText
               fontSize={'20'}

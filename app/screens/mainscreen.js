@@ -20,21 +20,22 @@ import {callGetApi} from '../services/index';
 
 import Icon from 'react-native-vector-icons/AntDesign';
 
+import Info from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {useColorScheme} from 'react-native-appearance';
 
-import {useRoute} from '@react-navigation/native';
-
 var colors = [
-  '#8F1D21',
-  '#9D2933',
-  '#5B3256',
-  '#5D3F6A',
-  '#1F4788',
-  '#16A085',
-  '#006442',
-  '#264348',
-  '#E08A1E',
-  '#CA6924',
+  '#12182b',
+  '#1c2341',
+  '#280659',
+  '#801336',
+  '#c72c41',
+  '#ee4540',
+  '#f78914',
+  '#ffa33f',
+  '#055e68',
+  '#62a388',
+  '#0a91ab',
 ];
 
 function mainscreen({navigation}) {
@@ -136,7 +137,7 @@ function mainscreen({navigation}) {
           );
           navigation.push('ViewDetails');
         }}>
-        <Icon name="infocirlceo" size={25} style={styles.icon} />
+        <Info name="information-variant" size={25} style={styles.infoicon} />
       </TouchableOpacity>
     </View>
   ));
@@ -298,6 +299,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: '#007aff',
+  },
+  infoicon: {
+    color: '#FFFFFF',
   },
   icon1: {
     color: '#007aff',
