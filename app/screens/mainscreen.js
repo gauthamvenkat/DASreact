@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   RefreshControl,
   TextInput,
+  Alert,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -19,6 +20,8 @@ import {getwh, getww} from '../utils/layout';
 import {callGetApi} from '../services/index';
 
 import Icon from 'react-native-vector-icons/AntDesign';
+
+import NetInfo from '@react-native-community/netinfo';
 
 import Info from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -36,6 +39,16 @@ var colors = [
   '#055e68',
   '#62a388',
   '#0a91ab',
+  '#8F1D21',
+  '#9D2933',
+  '#5B3256',
+  '#5D3F6A',
+  '#1F4788',
+  '#16A085',
+  '#006442',
+  '#264348',
+  '#E08A1E',
+  '#CA6924',
 ];
 
 function mainscreen({navigation}) {
@@ -48,47 +61,113 @@ function mainscreen({navigation}) {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    var username = AsyncStorage.getItem('username');
-    username.then(function(result) {
-      var url = `students/${result}`;
-      var studentdetails = callGetApi(url);
-      studentdetails.then(function(resultA) {
-        AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
-        setStudentDet(resultA);
-        AsyncStorage.setItem('coursedetails', JSON.stringify(resultA.courses));
-        var courseInfo = AsyncStorage.getItem('coursedetails');
-        courseInfo.then(function(resultB) {
-          var courseDetails = JSON.parse(resultB);
-          var i = '';
-          var courseArray = [];
-          for (i = 0; i < courseDetails.length; i++) {
-            courseArray[i] = courseDetails[i];
-          }
-          setCourseDet(courseArray);
-          setStoreCourseDet(courseArray);
+    NetInfo.fetch().then(state => {
+      if (state.isConnected === true) {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var url = `students/${result}`;
+          var studentdetails = callGetApi(url);
+          studentdetails.then(function(resultA) {
+            AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
+            setStudentDet(resultA);
+            AsyncStorage.setItem(
+              'coursedetails',
+              JSON.stringify(resultA.courses),
+            );
+            var courseInfo = AsyncStorage.getItem('coursedetails');
+            courseInfo.then(function(resultB) {
+              var courseDetails = JSON.parse(resultB);
+              var i = '';
+              var courseArray = [];
+              for (i = 0; i < courseDetails.length; i++) {
+                courseArray[i] = courseDetails[i];
+              }
+              setCourseDet(courseArray);
+              setStoreCourseDet(courseArray);
+            });
+          });
         });
-      });
+      } else {
+        var studentdetails = AsyncStorage.getItem('studentdetails');
+        studentdetails.then(function(result) {
+          var sd = JSON.parse(result);
+          setStudentDet(sd);
+          AsyncStorage.setItem('coursedetails', JSON.stringify(sd.courses));
+          var courseInfo = AsyncStorage.getItem('coursedetails');
+          courseInfo.then(function(resultB) {
+            var courseDetails = JSON.parse(resultB);
+            var i = '';
+            var courseArray = [];
+            for (i = 0; i < courseDetails.length; i++) {
+              courseArray[i] = courseDetails[i];
+            }
+            setCourseDet(courseArray);
+            setStoreCourseDet(courseArray);
+          });
+        });
+        Alert.alert(
+          'Error',
+          'Cannot get response from the server',
+          [{text: 'OK', onPress: () => {}}],
+          {cancelable: false},
+        );
+      }
     });
   }, []);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    var username = AsyncStorage.getItem('username');
-    username.then(function(result) {
-      var url = `students/${result}`;
-      var studentdetails = callGetApi(url);
-      studentdetails.then(function(resultA) {
-        AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
-        setStudentDet(resultA);
-        var courseDetails = resultA.courses;
-        var i = '';
-        var courseArray = [];
-        for (i = 0; i < courseDetails.length; i++) {
-          courseArray[i] = courseDetails[i];
-        }
-        setCourseDet(courseArray);
-        setStoreCourseDet(courseArray);
-        setRefreshing(false);
-      });
+    NetInfo.fetch().then(state => {
+      if (state.isConnected === true) {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var url = `students/${result}`;
+          var studentdetails = callGetApi(url);
+          studentdetails.then(function(resultA) {
+            AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
+            setStudentDet(resultA);
+            AsyncStorage.setItem(
+              'coursedetails',
+              JSON.stringify(resultA.courses),
+            );
+            var courseInfo = AsyncStorage.getItem('coursedetails');
+            courseInfo.then(function(resultB) {
+              var courseDetails = JSON.parse(resultB);
+              var i = '';
+              var courseArray = [];
+              for (i = 0; i < courseDetails.length; i++) {
+                courseArray[i] = courseDetails[i];
+              }
+              setCourseDet(courseArray);
+              setStoreCourseDet(courseArray);
+            });
+          });
+        });
+      } else {
+        var studentdetails = AsyncStorage.getItem('studentdetails');
+        studentdetails.then(function(result) {
+          var sd = JSON.parse(result);
+          setStudentDet(sd);
+          AsyncStorage.setItem('coursedetails', JSON.stringify(sd.courses));
+          var courseInfo = AsyncStorage.getItem('coursedetails');
+          courseInfo.then(function(resultB) {
+            var courseDetails = JSON.parse(resultB);
+            var i = '';
+            var courseArray = [];
+            for (i = 0; i < courseDetails.length; i++) {
+              courseArray[i] = courseDetails[i];
+            }
+            setCourseDet(courseArray);
+            setStoreCourseDet(courseArray);
+          });
+        });
+        Alert.alert(
+          'Error',
+          'Cannot get response from the server',
+          [{text: 'OK', onPress: () => {}}],
+          {cancelable: false},
+        );
+      }
+      setRefreshing(false);
     });
   }, [refreshing]);
 

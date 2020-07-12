@@ -6,8 +6,7 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
-  ActivityIndicator,
-  BackHandler,
+  Alert,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -22,6 +21,8 @@ import {Svg, Circle, Text as SVGText} from 'react-native-svg';
 
 import {useColorScheme} from 'react-native-appearance';
 
+import NetInfo from '@react-native-community/netinfo';
+
 function viewdetails({navigation}) {
   const [courseId, setCourseID] = useState('');
   const [courseName, setCourseName] = useState('');
@@ -31,29 +32,51 @@ function viewdetails({navigation}) {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
-    var username = AsyncStorage.getItem('username');
-    username.then(function(result) {
-      var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
-      courseInfo.then(function(resultA) {
-        var courseDetails = JSON.parse(resultA);
-        var teacherDetails = courseDetails.teacher;
-        setCourseID(courseDetails.courseID);
-        setCourseName(courseDetails.name);
-        var url = `attendance/${result}/${courseDetails.courseID}/${
-          courseDetails.slot
-        }/${teacherDetails.username}/`;
-        var attendanceAPI = callGetApi(url);
-        attendanceAPI.then(function(resultB) {
-          if (resultB.detail === 'Attendance at 0') {
-            setTotalAttendance(0);
-            setTotalClassesAttended(0);
-            setTotalClassesTaken(0);
-          }
-          setTotalAttendance(resultB['Attendance-percent']);
-          setTotalClassesTaken(resultB['Attedance-total']);
-          setTotalClassesAttended(resultB['Attendance-present']);
+    NetInfo.fetch().then(state => {
+      if (state.isConnected === true) {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
+          courseInfo.then(function(resultA) {
+            var courseDetails = JSON.parse(resultA);
+            var teacherDetails = courseDetails.teacher;
+            setCourseID(courseDetails.courseID);
+            setCourseName(courseDetails.name);
+            var url = `attendance/student/${result}/${courseDetails.courseID}/${
+              courseDetails.slot
+            }/${teacherDetails.username}/percentage`;
+            var attendanceAPI = callGetApi(url);
+            attendanceAPI.then(function(resultB) {
+              if (resultB.error === 'No attendance objects found.') {
+                setTotalAttendance(0);
+                setTotalClassesAttended(0);
+                setTotalClassesTaken(0);
+              } else {
+                setTotalAttendance(resultB.attendanceInfo.percentage);
+                setTotalClassesTaken(resultB.attendanceInfo.total);
+                setTotalClassesAttended(resultB.attendanceInfo.present);
+              }
+            });
+          });
         });
-      });
+      } else {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
+          courseInfo.then(function(resultA) {
+            var courseDetails = JSON.parse(resultA);
+            var teacherDetails = courseDetails.teacher;
+            setCourseID(courseDetails.courseID);
+            setCourseName(courseDetails.name);
+          });
+        });
+        Alert.alert(
+          'Error',
+          'Cannot get response from the server',
+          [{text: 'OK', onPress: () => {}}],
+          {cancelable: false},
+        );
+      }
     });
   }, []);
 
@@ -118,29 +141,51 @@ function viewdetails({navigation}) {
   };
 
   const refresh = useCallback(() => {
-    var username = AsyncStorage.getItem('username');
-    username.then(function(result) {
-      var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
-      courseInfo.then(function(resultA) {
-        var courseDetails = JSON.parse(resultA);
-        var teacherDetails = courseDetails.teacher;
-        setCourseID(courseDetails.courseID);
-        setCourseName(courseDetails.name);
-        var url = `attendance/${result}/${courseDetails.courseID}/${
-          courseDetails.slot
-        }/${teacherDetails.username}/`;
-        var attendanceAPI = callGetApi(url);
-        attendanceAPI.then(function(resultB) {
-          if (resultB.detail === 'Attendance at 0') {
-            setTotalAttendance(0);
-            setTotalClassesAttended(0);
-            setTotalClassesTaken(0);
-          }
-          setTotalAttendance(resultB['Attendance-percent']);
-          setTotalClassesTaken(resultB['Attedance-total']);
-          setTotalClassesAttended(resultB['Attendance-present']);
+    NetInfo.fetch().then(state => {
+      if (state.isConnected === true) {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
+          courseInfo.then(function(resultA) {
+            var courseDetails = JSON.parse(resultA);
+            var teacherDetails = courseDetails.teacher;
+            setCourseID(courseDetails.courseID);
+            setCourseName(courseDetails.name);
+            var url = `attendance/student/${result}/${courseDetails.courseID}/${
+              courseDetails.slot
+            }/${teacherDetails.username}/percentage`;
+            var attendanceAPI = callGetApi(url);
+            attendanceAPI.then(function(resultB) {
+              if (resultB.error === 'No attendance objects found.') {
+                setTotalAttendance(0);
+                setTotalClassesAttended(0);
+                setTotalClassesTaken(0);
+              } else {
+                setTotalAttendance(resultB.attendanceInfo.percentage);
+                setTotalClassesTaken(resultB.attendanceInfo.total);
+                setTotalClassesAttended(resultB.attendanceInfo.present);
+              }
+            });
+          });
         });
-      });
+      } else {
+        var username = AsyncStorage.getItem('username');
+        username.then(function(result) {
+          var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
+          courseInfo.then(function(resultA) {
+            var courseDetails = JSON.parse(resultA);
+            var teacherDetails = courseDetails.teacher;
+            setCourseID(courseDetails.courseID);
+            setCourseName(courseDetails.name);
+          });
+        });
+        Alert.alert(
+          'Error',
+          'Cannot get response from the server',
+          [{text: 'OK', onPress: () => {}}],
+          {cancelable: false},
+        );
+      }
     });
   }, []);
   return (

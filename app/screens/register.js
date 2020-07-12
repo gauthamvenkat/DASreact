@@ -58,9 +58,11 @@ function register({navigation}) {
       password: confirmpasswordtext,
       cat: 'Student',
     };
-    var url = 'token/register';
+    var url = 'register';
     var registerApi = await callPostApi(data, url);
-    console.log(registerApi);
+    if (registerApi.Registration === 'Successful, verification email sent.') {
+      navigation.push('Verification');
+    }
   };
   return (
     <ScrollView>
@@ -151,9 +153,10 @@ function register({navigation}) {
       </View>
       <TouchableOpacity
         style={styles.registerbutton}
-        onPress={() => {
+        onPress={async () => {
           if (emailvalid && passwordvalid === true) {
-            onSucess();
+            console.log('Hello');
+            await onSucess();
           }
         }}>
         <Text style={styles.registertext}>Register</Text>
@@ -165,7 +168,7 @@ const styles = StyleSheet.create({
   registerbutton: {
     backgroundColor: '#007aff',
     width: getww(60),
-    height: getwh(6),
+    height: getwh(7),
     marginTop: getwh(4),
     marginLeft: getww(19.5),
     marginRight: getww(15),

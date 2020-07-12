@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 export const callPostApi = async (data, url) => {
-  const baseUrl = 'https://das.pythonanywhere.com/api/';
+  const baseUrl = 'http://13.233.160.133:8080/api/';
   const fullUrl = baseUrl + url;
   try {
     let response = await fetch(fullUrl, {
@@ -15,16 +15,17 @@ export const callPostApi = async (data, url) => {
     var logindetail = await response.json();
     return logindetail;
   } catch (errors) {
-    console.log(errors);
+    return errors;
   }
 };
 export const callGetApi = async url => {
-  const baseUrl = 'https://das.pythonanywhere.com/api/';
+  const baseUrl = 'http://13.233.160.133:8080/api/';
   const fullUrl = baseUrl + url;
   const authToken = await AsyncStorage.getItem('token');
   try {
     let response = await fetch(fullUrl, {
       method: 'GET',
+      timeout: 5000,
       headers: {
         Authorization: `Token ${authToken}`,
         Accept: 'application/json',
@@ -34,11 +35,11 @@ export const callGetApi = async url => {
     var logindetail = await response.json();
     return logindetail;
   } catch (errors) {
-    console.log(errors);
+    return errors;
   }
 };
 export const callPatchApi = async (url, data) => {
-  const baseUrl = 'https://das.pythonanywhere.com/api/';
+  const baseUrl = 'http://13.233.160.133:8080/api/';
   const fullUrl = baseUrl + url;
   const authToken = await AsyncStorage.getItem('token');
   try {
@@ -54,6 +55,6 @@ export const callPatchApi = async (url, data) => {
     var logindetail = await response.json();
     return logindetail;
   } catch (errors) {
-    console.log(errors);
+    return errors;
   }
 };

@@ -50,6 +50,8 @@ import postattendance from './app/screens/postattendance';
 
 import postattendancev from './app/screens/postattendancev';
 
+import verficationscreen from './app/screens/verficationscreen';
+
 import {useColorScheme} from 'react-native-appearance';
 
 const AuthContext = createContext();
@@ -234,20 +236,12 @@ export default function App({navigation}) {
   );
 
   useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let userToken;
 
       try {
         userToken = await AsyncStorage.getItem('token');
-      } catch (e) {
-        // Restoring token failed
-      }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
+      } catch (e) {}
       dispatch({type: 'RESTORE_TOKEN', token: userToken});
     };
 
@@ -257,15 +251,16 @@ export default function App({navigation}) {
   const authContext = useMemo(
     () => ({
       signIn: async data => {
+        var username = data.logintext.toLowerCase();
         var urldata = {
-          username: data.logintext,
+          username: username,
           password: data.registertext,
         };
         var url = 'token/login';
         console.log(DeviceInfo.getUniqueId());
         var loginApi = await callPostApi(urldata, url);
         await AsyncStorage.setItem('token', loginApi.token);
-        await AsyncStorage.setItem('username', data.logintext);
+        await AsyncStorage.setItem('username', username);
         if (loginApi.token !== undefined) {
           dispatch({type: 'SIGN_IN', token: loginApi.token});
         }
@@ -296,6 +291,7 @@ export default function App({navigation}) {
               />
               <Stack.Screen name="Login" component={login} />
               <Stack.Screen name="Register" component={register} />
+              <Stack.Screen name="Verification" component={verficationscreen} />
             </>
           ) : (
             <>
