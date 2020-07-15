@@ -56,6 +56,7 @@ function mainscreen({navigation}) {
   const [coursedet, setCourseDet] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [courseAlert, setCourseAlert] = useState(false);
   const [storeCoursedet, setStoreCourseDet] = useState([]);
   const [searchview, setSearchView] = useState(false);
   const colorScheme = useColorScheme();
@@ -77,6 +78,11 @@ function mainscreen({navigation}) {
             var courseInfo = AsyncStorage.getItem('coursedetails');
             courseInfo.then(function(resultB) {
               var courseDetails = JSON.parse(resultB);
+              if (courseDetails.length === 0) {
+                setCourseAlert(true);
+              } else {
+                setCourseAlert(false);
+              }
               var i = '';
               var courseArray = [];
               for (i = 0; i < courseDetails.length; i++) {
@@ -96,6 +102,11 @@ function mainscreen({navigation}) {
           var courseInfo = AsyncStorage.getItem('coursedetails');
           courseInfo.then(function(resultB) {
             var courseDetails = JSON.parse(resultB);
+            if (courseDetails.length === 0) {
+              setCourseAlert(true);
+            } else {
+              setCourseAlert(false);
+            }
             var i = '';
             var courseArray = [];
             for (i = 0; i < courseDetails.length; i++) {
@@ -132,6 +143,11 @@ function mainscreen({navigation}) {
             var courseInfo = AsyncStorage.getItem('coursedetails');
             courseInfo.then(function(resultB) {
               var courseDetails = JSON.parse(resultB);
+              if (courseDetails.length === 0) {
+                setCourseAlert(true);
+              } else {
+                setCourseAlert(false);
+              }
               var i = '';
               var courseArray = [];
               for (i = 0; i < courseDetails.length; i++) {
@@ -151,6 +167,11 @@ function mainscreen({navigation}) {
           var courseInfo = AsyncStorage.getItem('coursedetails');
           courseInfo.then(function(resultB) {
             var courseDetails = JSON.parse(resultB);
+            if (courseDetails.length === 0) {
+              setCourseAlert(true);
+            } else {
+              setCourseAlert(false);
+            }
             var i = '';
             var courseArray = [];
             for (i = 0; i < courseDetails.length; i++) {
@@ -268,10 +289,20 @@ function mainscreen({navigation}) {
                     numberOfLines={1}>{`Welcome ${studentdet.name}`}</Text>
                 </View>
               )}
-              <View
-                style={searchview ? styles.listviewsearch : styles.listview}>
-                {listItems}
-              </View>
+              {courseAlert ? (
+                <Text
+                  style={
+                    colorScheme === 'dark' ? styles.darknotitle : styles.notitle
+                  }>
+                  No Courses to Display
+                </Text>
+              ) : (
+                <View
+                  style={searchview ? styles.listviewsearch : styles.listview}>
+                  {listItems}
+                </View>
+              )}
+
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.TouchableOpacityStyle}
@@ -358,6 +389,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     color: '#FFFFFF',
+  },
+  notitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginTop: getwh(20),
+    textAlign: 'center',
+  },
+  darknotitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginTop: getwh(20),
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   titleview: {
     marginTop: getwh(5),

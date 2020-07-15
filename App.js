@@ -257,7 +257,6 @@ export default function App({navigation}) {
           password: data.registertext,
         };
         var url = 'token/login';
-        console.log(DeviceInfo.getUniqueId());
         var loginApi = await callPostApi(urldata, url);
         await AsyncStorage.setItem('token', loginApi.token);
         await AsyncStorage.setItem('username', username);

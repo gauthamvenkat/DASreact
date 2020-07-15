@@ -56,7 +56,7 @@ function register({navigation}) {
       name: nametext,
       email: emailtext,
       password: confirmpasswordtext,
-      cat: 'Student',
+      cat: 'student',
     };
     var url = 'register';
     var registerApi = await callPostApi(data, url);
@@ -108,7 +108,7 @@ function register({navigation}) {
         }
         placeholder="Registration No"
         placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
-        onChangeText={text => setRegNoText(text)}
+        onChangeText={text => setRegNoText(text.toLowerCase())}
         defaultValue={regnotext}
       />
       <TextInput
@@ -153,10 +153,9 @@ function register({navigation}) {
       </View>
       <TouchableOpacity
         style={styles.registerbutton}
-        onPress={async () => {
+        onPress={() => {
           if (emailvalid && passwordvalid === true) {
-            console.log('Hello');
-            await onSucess();
+            onSucess();
           }
         }}>
         <Text style={styles.registertext}>Register</Text>
