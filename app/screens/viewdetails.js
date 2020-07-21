@@ -19,6 +19,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 import {Svg, Circle, Text as SVGText} from 'react-native-svg';
 
+import Info from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {useColorScheme} from 'react-native-appearance';
 
 import NetInfo from '@react-native-community/netinfo';
@@ -65,7 +67,6 @@ function viewdetails({navigation}) {
           var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
           courseInfo.then(function(resultA) {
             var courseDetails = JSON.parse(resultA);
-            var teacherDetails = courseDetails.teacher;
             setCourseID(courseDetails.courseID);
             setCourseName(courseDetails.name);
           });
@@ -174,7 +175,6 @@ function viewdetails({navigation}) {
           var courseInfo = AsyncStorage.getItem('requiredcourseinfo');
           courseInfo.then(function(resultA) {
             var courseDetails = JSON.parse(resultA);
-            var teacherDetails = courseDetails.teacher;
             setCourseID(courseDetails.courseID);
             setCourseName(courseDetails.name);
           });
@@ -277,6 +277,12 @@ function viewdetails({navigation}) {
           onPress={() => refresh()}>
           <Icon name="reload1" size={25} style={styles.icon} />
         </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.TouchableOpacityStyleinfo}
+          onPress={() => navigation.push('DetailedAttendance')}>
+          <Info name="information-variant" size={30} style={styles.icon} />
+        </TouchableOpacity>
         <View style={styles.classesinfo}>
           <Text style={colorScheme === 'dark' ? styles.darktca : styles.tca}>
             {totalClassesAttended !== undefined
@@ -353,6 +359,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     right: getww(5),
+    bottom: getwh(2),
+  },
+  TouchableOpacityStyleinfo: {
+    top: getwh(5.6),
+    position: 'absolute',
+    width: getww(10),
+    height: getwh(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: getww(16),
     bottom: getwh(2),
   },
   buttonview: {

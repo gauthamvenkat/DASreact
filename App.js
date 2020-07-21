@@ -54,6 +54,8 @@ import verficationscreen from './app/screens/verficationscreen';
 
 import {useColorScheme} from 'react-native-appearance';
 
+import detailedattendanceview from './app/screens/detailedattendanceview';
+
 const AuthContext = createContext();
 
 function SplashScreen() {
@@ -300,6 +302,10 @@ export default function App({navigation}) {
               <Stack.Screen
                 name="PostAttendanceV"
                 component={postattendancev}
+              />
+              <Stack.Screen
+                name="DetailedAttendance"
+                component={detailedattendanceview}
               />
               <Stack.Screen name="AddCourse" component={addcoursescreen} />
             </>
