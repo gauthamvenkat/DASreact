@@ -60,6 +60,7 @@ function register({navigation}) {
     };
     var url = 'register';
     var registerApi = await callPostApi(data, url);
+    console.log(registerApi);
     if (registerApi.Registration === 'Successful, verification email sent.') {
       navigation.push('Verification');
     }

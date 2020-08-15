@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 export const callPostApi = async (data, url) => {
-  const baseUrl = 'http://13.233.160.133:8080/api/';
+  const baseUrl = 'https://das.vit.ac.in/api/';
   const fullUrl = baseUrl + url;
   try {
     let response = await fetch(fullUrl, {
@@ -19,7 +19,7 @@ export const callPostApi = async (data, url) => {
   }
 };
 export const callGetApi = async url => {
-  const baseUrl = 'http://13.233.160.133:8080/api/';
+  const baseUrl = 'https://das.vit.ac.in/api/';
   const fullUrl = baseUrl + url;
   const authToken = await AsyncStorage.getItem('token');
   try {
@@ -39,7 +39,7 @@ export const callGetApi = async url => {
   }
 };
 export const callPatchApi = async (url, data) => {
-  const baseUrl = 'http://13.233.160.133:8080/api/';
+  const baseUrl = 'https://das.vit.ac.in/api/';
   const fullUrl = baseUrl + url;
   const authToken = await AsyncStorage.getItem('token');
   try {
