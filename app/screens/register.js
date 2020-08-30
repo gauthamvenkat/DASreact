@@ -53,10 +53,11 @@ function register({navigation}) {
   };
   const onSucess = async () => {
     var regno = regnotext.toLowerCase();
+    var emailid = emailtext.toLowerCase();
     var data = {
       username: regno,
       name: nametext,
-      email: emailtext,
+      email: emailid,
       password: confirmpasswordtext,
       cat: 'student',
     };

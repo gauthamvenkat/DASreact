@@ -135,6 +135,7 @@ function mainscreen({navigation}) {
           var studentdetails = callGetApi(url);
           studentdetails.then(function(resultA) {
             AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
+            console.log(resultA);
             setStudentDet(resultA);
             AsyncStorage.setItem(
               'coursedetails',
