@@ -16,6 +16,7 @@ import {
   TouchableOpacity,
   Animated,
   StyleSheet,
+  Alert,
 } from 'react-native';
 
 import {getwh, getww, width} from './app/utils/layout';
@@ -260,10 +261,24 @@ export default function App({navigation}) {
         };
         var url = 'token/login';
         var loginApi = await callPostApi(urldata, url);
-        await AsyncStorage.setItem('token', loginApi.token);
-        await AsyncStorage.setItem('username', username);
         if (loginApi.token !== undefined) {
+          await AsyncStorage.setItem('token', loginApi.token);
+          await AsyncStorage.setItem('username', username);
           dispatch({type: 'SIGN_IN', token: loginApi.token});
+        } else if (
+          loginApi.non_field_errors[0] ===
+          'Unable to log in with provided credentials.'
+        ) {
+          Alert.alert(
+            'Error',
+            'Please Check your Username and Password',
+            [
+              {
+                text: 'Try Again',
+              },
+            ],
+            {cancelable: false},
+          );
         }
         return false;
       },

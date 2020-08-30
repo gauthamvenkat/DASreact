@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -51,8 +52,9 @@ function register({navigation}) {
     }
   };
   const onSucess = async () => {
+    var regno = regnotext.toLowerCase();
     var data = {
-      username: regnotext,
+      username: regno,
       name: nametext,
       email: emailtext,
       password: confirmpasswordtext,
@@ -60,9 +62,19 @@ function register({navigation}) {
     };
     var url = 'register';
     var registerApi = await callPostApi(data, url);
-    console.log(registerApi);
     if (registerApi.Registration === 'Successful, verification email sent.') {
       navigation.push('Verification');
+    } else {
+      Alert.alert(
+        'Error',
+        'User Already Exists',
+        [
+          {
+            text: 'Try Again',
+          },
+        ],
+        {cancelable: false},
+      );
     }
   };
   return (
@@ -109,7 +121,7 @@ function register({navigation}) {
         }
         placeholder="Registration No"
         placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
-        onChangeText={text => setRegNoText(text.toLowerCase())}
+        onChangeText={text => setRegNoText(text)}
         defaultValue={regnotext}
       />
       <TextInput
