@@ -79,7 +79,7 @@ function register({navigation}) {
     }
   };
   return (
-    <ScrollView>
+    <ScrollView style={styles.registerview}>
       <Text style={styles.title}>Welcome to D.A.S</Text>
       <Text style={styles.titleA}>
         Please fill in the following information to register into D.A.S
@@ -219,6 +219,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  registerview: {
+    marginBottom: getwh(2),
   },
   nameinput: {
     borderBottomWidth: 2,

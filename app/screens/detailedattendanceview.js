@@ -194,6 +194,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: getww(1),
+    marginRight: getww(1),
     height: getwh(8),
     marginTop: getwh(0.5),
     borderRadius: 10,
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     fontSize: 16.5,
     fontWeight: 'bold',
     marginLeft: getww(0),
-    marginRight: getww(10),
+    marginRight: getww(5),
     justifyContent: 'center',
     textAlign: 'center',
     color: '#000000',
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   attendancestatustitle: {
     fontSize: 16.5,
     fontWeight: 'bold',
-    marginLeft: getww(10),
+    marginLeft: getww(0),
     color: '#000000',
   },
   darkattendancestatustitle: {

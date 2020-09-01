@@ -17,6 +17,7 @@ import {
   Animated,
   StyleSheet,
   Alert,
+  ScrollView,
 } from 'react-native';
 
 import {getwh, getww, width} from './app/utils/layout';
@@ -83,7 +84,7 @@ function login() {
     setLoginInfo(info);
   };
   return (
-    <View>
+    <ScrollView>
       <Image
         style={loginstyles.image}
         source={require('./app/assets/dasicon.png')}
@@ -118,7 +119,7 @@ function login() {
           {logininfo ? 'Logging In...' : 'Login'}
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 function walkthrough({navigation}) {
