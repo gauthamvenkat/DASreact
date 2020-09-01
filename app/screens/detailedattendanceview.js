@@ -115,12 +115,16 @@ function detailedattendanceview({navigation}) {
         styles.list,
         {backgroundColor: data.is_present ? '#90ee90' : '#ffcccb'},
       ]}>
-      <Text style={styles.date} numberOfLines={1}>
-        {data.date}
-      </Text>
-      <Text style={styles.attendancestatus} numberOfLines={1}>
-        {data.is_present ? 'Present' : 'Absent'}
-      </Text>
+      <View style={styles.datelisttitle}>
+        <Text style={styles.date} numberOfLines={1}>
+          {data.date}
+        </Text>
+      </View>
+      <View style={styles.attendancestatuslisttitle}>
+        <Text style={styles.attendancestatus} numberOfLines={1}>
+          {data.is_present ? 'Present' : 'Absent'}
+        </Text>
+      </View>
     </View>
   ));
   return (
@@ -131,12 +135,28 @@ function detailedattendanceview({navigation}) {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View style={styles.listtitle}>
-            <Text style={styles.datetitle} numberOfLines={1}>
-              Date
-            </Text>
-            <Text style={styles.attendancestatustitle} numberOfLines={1}>
-              Attendance Status
-            </Text>
+            <View style={styles.datelisttitle}>
+              <Text
+                style={
+                  colorScheme === 'dark'
+                    ? styles.darkdatetitle
+                    : styles.datetitle
+                }
+                numberOfLines={1}>
+                Date
+              </Text>
+            </View>
+            <View style={styles.attendancestatuslisttitle}>
+              <Text
+                style={
+                  colorScheme === 'dark'
+                    ? styles.darkattendancestatustitle
+                    : styles.attendancestatustitle
+                }
+                numberOfLines={1}>
+                Attendance Status
+              </Text>
+            </View>
           </View>
           {listItems}
         </ScrollView>
@@ -151,19 +171,29 @@ const styles = StyleSheet.create({
   listtitle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: getww(3),
+    marginTop: getwh(2),
+    width: getww(100),
+  },
+  attendancestatuslisttitle: {
+    justifyContent: 'center',
+    width: getww(50),
     marginRight: getww(3),
+    height: getwh(8),
+    marginTop: getwh(0.5),
+    borderRadius: 10,
+  },
+  datelisttitle: {
+    justifyContent: 'center',
+    marginLeft: getww(3),
+    width: getww(50),
     height: getwh(8),
     marginTop: getwh(0.5),
     borderRadius: 10,
   },
   list: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: getww(3),
-    marginRight: getww(3),
     height: getwh(8),
     marginTop: getwh(0.5),
     borderRadius: 10,
@@ -171,7 +201,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 16.5,
     fontWeight: 'bold',
-    marginLeft: getww(7),
+    marginLeft: getww(0),
     justifyContent: 'center',
     textAlign: 'center',
     color: '#FFFFFF',
@@ -179,7 +209,16 @@ const styles = StyleSheet.create({
   attendancestatus: {
     fontSize: 16.5,
     fontWeight: 'bold',
-    marginLeft: getww(22),
+    marginLeft: getww(10),
+    color: '#FFFFFF',
+  },
+  darkdatetitle: {
+    fontSize: 16.5,
+    fontWeight: 'bold',
+    marginLeft: getww(0),
+    marginRight: getww(5),
+    justifyContent: 'center',
+    textAlign: 'center',
     color: '#FFFFFF',
   },
   datetitle: {
@@ -189,12 +228,18 @@ const styles = StyleSheet.create({
     marginRight: getww(10),
     justifyContent: 'center',
     textAlign: 'center',
-    color: '#FFFFFF',
+    color: '#000000',
   },
   attendancestatustitle: {
     fontSize: 16.5,
     fontWeight: 'bold',
     marginLeft: getww(10),
+    color: '#000000',
+  },
+  darkattendancestatustitle: {
+    fontSize: 16.5,
+    fontWeight: 'bold',
+    marginLeft: getww(0),
     color: '#FFFFFF',
   },
 });
