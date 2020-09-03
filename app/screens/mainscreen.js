@@ -433,10 +433,10 @@ const styles = StyleSheet.create({
   },
   searchinput: {
     borderWidth: 2,
-    width: getww(75),
+    width: getww(65),
     paddingLeft: getww(4),
     fontSize: 15,
-    marginTop: getwh(3),
+    marginTop: getwh(4.5),
     marginLeft: getww(5),
     borderRadius: 10,
     borderColor: '#007aff',
