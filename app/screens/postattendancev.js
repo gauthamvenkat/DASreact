@@ -14,7 +14,7 @@ function postattendancev({navigation}) {
   const [reacti, setReacti] = useState('');
   const onSuccess = (e, time) => {
     var code = e.data.split('|');
-    if (code[1] === undefined) {
+    if (code.length !== 7) {
       Alert.alert(
         'Error',
         'Wrong QR Scanned, Please Try Again',
