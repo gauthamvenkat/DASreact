@@ -11,8 +11,6 @@ import {
   Alert,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
 import {getwh, getww} from '../utils/layout';
 
 import {callPostApi} from '../services/index';
@@ -29,6 +27,7 @@ function register({navigation}) {
   const [passwordvalid, setPasswordValid] = useState('');
   const [emailtouch, setEmailTouch] = useState(false);
   const [passwordtouch, setPasswordTouch] = useState(false);
+  const [registerinfo, setRegisterInfo] = useState(false);
   const colorScheme = useColorScheme();
 
   const emailvalidation = text => {
@@ -52,6 +51,7 @@ function register({navigation}) {
     }
   };
   const onSucess = async () => {
+    setRegisterInfo(true);
     var regno = regnotext.toLowerCase();
     var emailid = emailtext.toLowerCase();
     var data = {
@@ -63,12 +63,36 @@ function register({navigation}) {
     };
     var url = 'register';
     var registerApi = await callPostApi(data, url);
-    if (registerApi.Registration === 'Successful, verification email sent.') {
-      navigation.push('Verification');
-    } else {
+    try {
+      if (registerApi.Registration === 'Successful, verification email sent.') {
+        navigation.push('Verification');
+      } else if (registerApi.Registration === 'not-successful,user exists') {
+        Alert.alert(
+          'Error',
+          'User Already Exists',
+          [
+            {
+              text: 'Try Again',
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert(
+          'Error',
+          'Something went wrong',
+          [
+            {
+              text: 'Try Again',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    } catch (error) {
       Alert.alert(
         'Error',
-        'User Already Exists',
+        'Cannot get response from server',
         [
           {
             text: 'Try Again',
@@ -77,6 +101,7 @@ function register({navigation}) {
         {cancelable: false},
       );
     }
+    setRegisterInfo(false);
   };
   return (
     <ScrollView style={styles.registerview}>
@@ -168,11 +193,32 @@ function register({navigation}) {
       <TouchableOpacity
         style={styles.registerbutton}
         onPress={() => {
-          if (emailvalid && passwordvalid === true) {
-            onSucess();
+          if (
+            nametext &&
+            emailtext &&
+            passwordtext &&
+            confirmpasswordtext &&
+            regnotext !== ''
+          ) {
+            if (emailvalid && passwordvalid === true) {
+              onSucess();
+            }
+          } else {
+            Alert.alert(
+              'Error',
+              'All the fields have not been entered',
+              [
+                {
+                  text: 'Try Again',
+                },
+              ],
+              {cancelable: false},
+            );
           }
         }}>
-        <Text style={styles.registertext}>Register</Text>
+        <Text style={styles.registertext}>
+          {registerinfo ? 'Registering...' : 'Register'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -25,7 +25,6 @@ export const callGetApi = async url => {
   try {
     let response = await fetch(fullUrl, {
       method: 'GET',
-      timeout: 5000,
       headers: {
         Authorization: `Token ${authToken}`,
         Accept: 'application/json',

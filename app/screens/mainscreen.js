@@ -68,30 +68,39 @@ function mainscreen({navigation}) {
         username.then(function(result) {
           var url = `students/${result}`;
           var studentdetails = callGetApi(url);
-          studentdetails.then(function(resultA) {
-            AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
-            setStudentDet(resultA);
-            AsyncStorage.setItem(
-              'coursedetails',
-              JSON.stringify(resultA.courses),
-            );
-            var courseInfo = AsyncStorage.getItem('coursedetails');
-            courseInfo.then(function(resultB) {
-              var courseDetails = JSON.parse(resultB);
-              if (courseDetails.length === 0) {
-                setCourseAlert(true);
-              } else {
-                setCourseAlert(false);
-              }
-              var i = '';
-              var courseArray = [];
-              for (i = 0; i < courseDetails.length; i++) {
-                courseArray[i] = courseDetails[i];
-              }
-              setCourseDet(courseArray);
-              setStoreCourseDet(courseArray);
+          try {
+            studentdetails.then(function(resultA) {
+              AsyncStorage.setItem('studentdetails', JSON.stringify(resultA));
+              setStudentDet(resultA);
+              AsyncStorage.setItem(
+                'coursedetails',
+                JSON.stringify(resultA.courses),
+              );
+              var courseInfo = AsyncStorage.getItem('coursedetails');
+              courseInfo.then(function(resultB) {
+                var courseDetails = JSON.parse(resultB);
+                if (courseDetails.length === 0) {
+                  setCourseAlert(true);
+                } else {
+                  setCourseAlert(false);
+                }
+                var i = '';
+                var courseArray = [];
+                for (i = 0; i < courseDetails.length; i++) {
+                  courseArray[i] = courseDetails[i];
+                }
+                setCourseDet(courseArray);
+                setStoreCourseDet(courseArray);
+              });
             });
-          });
+          } catch (error) {
+            Alert.alert(
+              'Error',
+              'Cannot get response from the server',
+              [{text: 'Try Again', onPress: () => {}}],
+              {cancelable: false},
+            );
+          }
         });
       } else {
         var studentdetails = AsyncStorage.getItem('studentdetails');
@@ -119,7 +128,7 @@ function mainscreen({navigation}) {
         Alert.alert(
           'Error',
           'Cannot get response from the server',
-          [{text: 'OK', onPress: () => {}}],
+          [{text: 'Try Again', onPress: () => {}}],
           {cancelable: false},
         );
       }
@@ -184,7 +193,7 @@ function mainscreen({navigation}) {
         Alert.alert(
           'Error',
           'Cannot get response from the server',
-          [{text: 'OK', onPress: () => {}}],
+          [{text: 'Try Again', onPress: () => {}}],
           {cancelable: false},
         );
       }

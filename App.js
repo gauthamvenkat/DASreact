@@ -262,22 +262,31 @@ export default function App({navigation}) {
         };
         var url = 'token/login';
         var loginApi = await callPostApi(urldata, url);
-        if (loginApi.token !== undefined) {
-          await AsyncStorage.setItem('token', loginApi.token);
-          await AsyncStorage.setItem('username', username);
-          dispatch({type: 'SIGN_IN', token: loginApi.token});
-        } else if (
-          loginApi.non_field_errors[0] ===
-          'Unable to log in with provided credentials.'
-        ) {
+        try {
+          if (loginApi.token !== undefined) {
+            await AsyncStorage.setItem('token', loginApi.token);
+            await AsyncStorage.setItem('username', username);
+            dispatch({type: 'SIGN_IN', token: loginApi.token});
+          } else if (
+            loginApi.non_field_errors[0] ===
+            'Unable to log in with provided credentials.'
+          ) {
+            Alert.alert(
+              'Error',
+              'Please Check your Username and Password',
+              [
+                {
+                  text: 'Try Again',
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        } catch (errors) {
           Alert.alert(
             'Error',
-            'Please Check your Username and Password',
-            [
-              {
-                text: 'Try Again',
-              },
-            ],
+            'Cannot get response from the server',
+            [{text: 'Try Again', onPress: () => {}}],
             {cancelable: false},
           );
         }
