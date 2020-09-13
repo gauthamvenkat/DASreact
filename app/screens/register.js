@@ -24,6 +24,7 @@ function register({navigation}) {
   const [passwordtext, setPasswordText] = useState('');
   const [confirmpasswordtext, setConfirmPasswordText] = useState('');
   const [emailvalid, setEmailValid] = useState('');
+  const [usernamevalid, setUsernameValid] = useState('');
   const [passwordvalid, setPasswordValid] = useState('');
   const [emailtouch, setEmailTouch] = useState(false);
   const [passwordtouch, setPasswordTouch] = useState(false);
@@ -37,6 +38,16 @@ function register({navigation}) {
       setEmailText(text);
     } else {
       setEmailValid(false);
+    }
+  };
+
+  const usernamevalidation = text => {
+    var reg = /[&\/\\#,+()$~%.'":*?<>{}]/g;
+    if (reg.test(text) === true) {
+      setUsernameValid(false);
+    } else {
+      setUsernameValid(true);
+      setRegNoText(text);
     }
   };
 
@@ -147,7 +158,7 @@ function register({navigation}) {
         }
         placeholder="Registration No"
         placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
-        onChangeText={text => setRegNoText(text)}
+        onChangeText={text => usernamevalidation(text)}
         defaultValue={regnotext}
       />
       <TextInput
@@ -200,8 +211,19 @@ function register({navigation}) {
             confirmpasswordtext &&
             regnotext !== ''
           ) {
-            if (emailvalid && passwordvalid === true) {
+            if (emailvalid && passwordvalid && usernamevalid === true) {
               onSucess();
+            } else {
+              Alert.alert(
+                'Error',
+                'Please Check your Email,Password and Reg No(No Special Characters Allowed)',
+                [
+                  {
+                    text: 'Try Again',
+                  },
+                ],
+                {cancelable: false},
+              );
             }
           } else {
             Alert.alert(
