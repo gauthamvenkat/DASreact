@@ -47,7 +47,7 @@ function register({navigation}) {
       setUsernameValid(false);
     } else {
       setUsernameValid(true);
-      setRegNoText(text);
+      setRegNoText(text.replace(/ /g, ''));
     }
   };
 
