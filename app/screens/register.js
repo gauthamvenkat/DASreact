@@ -135,8 +135,8 @@ function register({navigation}) {
           placeholder="Email"
           placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
           onKeyPress={() => setEmailTouch(true)}
-          onChangeText={text => emailvalidation(text)}
-          defaultValue={emailtext}
+          onChangeText={text => emailvalidation(text.replace(/ /g, ''))}
+          defaultValue={emailtext.replace(/ /g, '')}
         />
         {emailtouch ? (
           emailvalid ? (
