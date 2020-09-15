@@ -203,6 +203,7 @@ function register({navigation}) {
       </View>
       <TouchableOpacity
         style={styles.registerbutton}
+        disabled={registerinfo}
         onPress={() => {
           if (
             nametext &&

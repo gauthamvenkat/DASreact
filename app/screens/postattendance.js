@@ -89,7 +89,33 @@ function postattendance({navigation}) {
               var postattendanceAPI = callPatchApi(url, data);
               postattendanceAPI.then(function(resultB) {
                 if (resultB !== undefined) {
-                  navigation.goBack();
+                  Alert.alert(
+                    'Successful',
+                    'Attendance Posted',
+                    [
+                      {
+                        text: 'Continue',
+                        onPress: () => {
+                          navigation.goBack();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                } else {
+                  Alert.alert(
+                    'Error',
+                    'Something went wrong',
+                    [
+                      {
+                        text: 'Try Again',
+                        onPress: () => {
+                          reacti.reactivate();
+                        },
+                      },
+                    ],
+                    {cancelable: false},
+                  );
                 }
               });
             }

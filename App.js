@@ -97,7 +97,7 @@ function login() {
         }
         placeholder="Username"
         placeholderTextColor={colorScheme === 'dark' ? '#FFFFFF' : '#000000'}
-        onChangeText={text => setLoginText(text)}
+        onChangeText={text => setLoginText(text.replace(/ /g, ''))}
         defaultValue={logintext}
       />
       <TextInput
@@ -114,6 +114,7 @@ function login() {
       />
       <TouchableOpacity
         style={loginstyles.loginbutton}
+        disabled={logininfo}
         onPress={() => onSucess()}>
         <Text style={loginstyles.logintext}>
           {logininfo ? 'Logging In...' : 'Login'}
